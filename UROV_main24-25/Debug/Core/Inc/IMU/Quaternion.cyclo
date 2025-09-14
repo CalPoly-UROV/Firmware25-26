@@ -1,0 +1,2 @@
+../Core/Inc/IMU/Quaternion.c:9:6:Quaternion_Update	3
+../Core/Inc/IMU/Quaternion.c:44:7:invSqrt	1

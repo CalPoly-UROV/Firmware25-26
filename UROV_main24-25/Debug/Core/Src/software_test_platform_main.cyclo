@@ -1,0 +1,8 @@
+../Core/Src/software_test_platform_main.c:33:5:not_implemented	1
+../Core/Src/software_test_platform_main.c:41:5:terminate	1
+../Core/Src/software_test_platform_main.c:52:5:blink	1
+../Core/Src/software_test_platform_main.c:67:5:motor	2
+../Core/Src/software_test_platform_main.c:86:5:sensor	15
+../Core/Src/software_test_platform_main.c:161:5:thrusters_cmd	1
+../Core/Src/software_test_platform_main.c:168:5:init	1
+../Core/Src/software_test_platform_main.c:222:5:sw_test_main	2

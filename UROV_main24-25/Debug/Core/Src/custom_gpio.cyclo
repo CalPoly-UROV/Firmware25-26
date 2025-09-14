@@ -1,0 +1,6 @@
+../Core/Src/custom_gpio.c:11:6:initGPO	1
+../Core/Src/custom_gpio.c:29:6:initGPI	1
+../Core/Src/custom_gpio.c:40:6:initpin	2
+../Core/Src/custom_gpio.c:66:6:mpininit	3
+../Core/Src/custom_gpio.c:95:6:setpin	1
+../Core/Src/custom_gpio.c:101:6:resetpin	1

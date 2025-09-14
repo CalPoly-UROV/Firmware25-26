@@ -1,0 +1,5 @@
+../Core/Src/servo.c:53:6:Servo_init	2
+../Core/Src/servo.c:92:6:Servo_SetPosition	4
+../Core/Src/servo.c:107:6:Servo_SetAngle	3
+../Core/Src/servo.c:115:6:Servo_SetNeutral	2
+../Core/Src/servo.c:122:6:Servo_SetAllNeutral	2
