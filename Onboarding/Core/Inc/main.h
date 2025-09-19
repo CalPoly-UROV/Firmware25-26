@@ -32,6 +32,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "Temp_Probe/temp_timer.h"
+#include "timer.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

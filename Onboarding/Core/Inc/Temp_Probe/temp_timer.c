@@ -33,7 +33,7 @@ void TIM2_Init(void)
 {
 
 	RCC -> APB1ENR |= 1U;
-	TIM2 -> PSC = 20U;
+	TIM2 -> PSC = 15U;
 
 
 }
