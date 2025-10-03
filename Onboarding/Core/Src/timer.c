@@ -11,11 +11,12 @@ int flag = 0;
 void timer_init(){
 	RCC -> APB1ENR |= 1U;
 	TIM4 -> DIER |= 1U;
-	NVIC_EnableIRQ(TIM4_IRQn);//enable TIM2 interrupt
+	TIM4 -> PSC = (uint16_t)15;
+	NVIC_EnableIRQ(TIM4_IRQn);//enable TIM4 interrupt
 	__enable_irq();
 }
 
-void timer_pause(uint32_t delay){
+void timer_delay(uint32_t delay){
 	TIM4->ARR = delay;
 	TIM4->CR1 |= 1U;
 	while(flag == 0){}

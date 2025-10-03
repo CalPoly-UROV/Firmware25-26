@@ -13,4 +13,8 @@
 #include "stm32f4xx.h"
 #include "math.h"
 
+void timer_init(void);
+void timer_delay(uint32_t delay);
+void TIM4_IRQHandler(void);
+
 #endif /* INC_TIMER_H_ */

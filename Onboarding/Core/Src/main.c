@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
+#include "timer.h"
+#include "probe.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -43,15 +45,17 @@
 /* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef htim4;
 
+UART_HandleTypeDef huart3;
+
 /* USER CODE BEGIN PV */
 uint8_t buffer[64];
-uint32_t temp_buffer;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_TIM4_Init(void);
+static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -90,15 +94,16 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_USB_DEVICE_Init();
   MX_TIM4_Init();
+  MX_USART3_UART_Init();
+  MX_USB_DEVICE_Init();
   /* USER CODE BEGIN 2 */
   //TempProbe_Init(GPIOB, GPIO_PIN_9);
   //TempProbe_Start();
   timer_init();
-  uint8_t message[] = "Hello from STM32!\r";
-  CDC_Transmit_FS(message, sizeof(message) - 1);
-
+  uint8_t message[] = "abcdefghijklmnop";
+  uint8_t response;
+  uint8_t response_byte;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -108,16 +113,23 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  HAL_Delay(500);
-
-	  if(HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13))
-	  {
-		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, 1);
-		  //temp_buffer = TempProbe_GetTemp();
-		  CDC_Transmit_FS(temp_buffer, sizeof(temp_buffer) - 1);
+	  HAL_Delay(1000);
+	  GPIOB->ODR &= ~GPIO_PIN_11;
+	  timer_delay(500);
+	  GPIOB->ODR |= GPIO_PIN_11;
+	  timer_delay(100);
+	  response = GPIOB->IDR &= ~GPIO_PIN_11;
+	  timer_delay(500);
+	  if(response == 1){
+		  //not connected
 	  }else{
-		  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0, 0);
+		  //connected
+		  probe_write_byte(0x33);
+		  response_byte = probe_read_byte();
+		  HAL_UART_Transmit(&huart3, response_byte, sizeof(response_byte), 1);
 	  }
+	  //HAL_UART_Transmit(&huart3, message, sizeof(message), 1);
+	  //CDC_Transmit_FS(message, sizeof(message) - 1);
   }
   /* USER CODE END 3 */
 }
@@ -219,6 +231,39 @@ static void MX_TIM4_Init(void)
 }
 
 /**
+  * @brief USART3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART3_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART3_Init 0 */
+
+  /* USER CODE END USART3_Init 0 */
+
+  /* USER CODE BEGIN USART3_Init 1 */
+
+  /* USER CODE END USART3_Init 1 */
+  huart3.Instance = USART3;
+  huart3.Init.BaudRate = 115200;
+  huart3.Init.WordLength = UART_WORDLENGTH_8B;
+  huart3.Init.StopBits = UART_STOPBITS_1;
+  huart3.Init.Parity = UART_PARITY_NONE;
+  huart3.Init.Mode = UART_MODE_TX_RX;
+  huart3.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart3.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART3_Init 2 */
+
+  /* USER CODE END USART3_Init 2 */
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -234,12 +279,13 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_7|GPIO_PIN_9, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_0|GPIO_PIN_11|GPIO_PIN_7|GPIO_PIN_9, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PC13 */
   GPIO_InitStruct.Pin = GPIO_PIN_13;
@@ -254,8 +300,22 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB0 PB7 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_7|GPIO_PIN_9;
+  /*Configure GPIO pin : PB0 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PB11 */
+  GPIO_InitStruct.Pin = GPIO_PIN_11;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : PB7 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
