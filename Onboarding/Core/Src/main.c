@@ -101,9 +101,9 @@ int main(void)
   //TempProbe_Init(GPIOB, GPIO_PIN_9);
   //TempProbe_Start();
   timer_init();
-  uint8_t message[] = "abcdefghijklmnop";
-  uint8_t response;
-  uint8_t response_byte;
+  uint8_t message[] = "Not Connected\n\r";
+  uint32_t response = 0;
+  uint8_t response_byte = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -113,18 +113,26 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  GPIOB->ODR |= GPIO_PIN_11;
 	  HAL_Delay(1000);
 	  GPIOB->ODR &= ~GPIO_PIN_11;
 	  timer_delay(500);
 	  GPIOB->ODR |= GPIO_PIN_11;
 	  timer_delay(100);
-	  response = GPIOB->IDR &= ~GPIO_PIN_11;
+	  response = (GPIOB->IDR & GPIO_PIN_11) >> 11;
 	  timer_delay(500);
-	  if(response == 1){
+	  if(response){
 		  //not connected
+		  HAL_UART_Transmit(&huart3, message, sizeof(message), 1);
 	  }else{
 		  //connected
-		  probe_write_byte(0x33);
+		  probe_write_byte(0xCC);
+		  probe_write_byte(0x44);
+		  HAL_Delay(1000);
+		  probe_write_byte(0xBE);
+		  response_byte = probe_read_byte();
+		  response_byte = probe_read_byte();
+		  response_byte = probe_read_byte();
 		  response_byte = probe_read_byte();
 		  HAL_UART_Transmit(&huart3, response_byte, sizeof(response_byte), 1);
 	  }
@@ -300,8 +308,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PB0 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  /*Configure GPIO pins : PB0 PB9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -314,8 +322,8 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PB7 PB9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_7|GPIO_PIN_9;
+  /*Configure GPIO pin : PB7 */
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
