@@ -1,3 +1,0 @@
-../Core/Src/t200driver.c:18:6:useHSE	5
-../Core/Src/t200driver.c:31:6:PWM_Init	15
-../Core/Src/t200driver.c:103:6:PWM_SetDuty	7

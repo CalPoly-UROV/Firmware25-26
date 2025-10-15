@@ -5,6 +5,7 @@
  *      Author: robot
  */
 #include "timer.h"
+#include "main.h"
 
 int flag = 0;
 
@@ -15,6 +16,9 @@ void timer_init(){
 	NVIC_EnableIRQ(TIM4_IRQn);//enable TIM4 interrupt
 	__enable_irq();
 }
+
+char* begin = "Beginning Wait";
+char* end = "Ending Wait";
 
 void timer_delay(uint32_t delay){
 	TIM4->ARR = delay;

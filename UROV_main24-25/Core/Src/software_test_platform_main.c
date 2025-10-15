@@ -244,7 +244,7 @@ int sw_test_main(void)
 		 * probably just need to increase some values
 		 */
 		//PHT_Run();
-		//IMU_Run();
+		IMU_Run();
 		/*if(new)
 		{
 			CDC_Transmit_FS(recv_buff, strnlen(recv_buff, (unsigned) RECV_BUFF_SIZE));
