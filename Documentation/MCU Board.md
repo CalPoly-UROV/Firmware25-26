@@ -58,12 +58,17 @@ TIM4 : up to 4 Servos PWMs
 | --------- | --- | ----- |
 | USART2_Tx | D5  |       |
 | USART2_Rx | D6  |       |
+|           |     |       |
+| SPI1_NSS  | A4  |       |
 | SPI1_SCK  | B3  |       |
 | SPI1_MISO | B4  |       |
 | SPI1_MOSI | B5  |       |
+|           |     |       |
+| SPI2_NSS  | B9  |       |
 | SPI2_SCK  | B10 |       |
 | SPI2_MISO | C2  |       |
 | SPI2_MOSI | C3  |       |
+|           |     |       |
 | I2C1_SCL  | B6  |       |
 | I2C1_SDA  | B7  |       |
 | I2C2_SDA  | F0  |       |

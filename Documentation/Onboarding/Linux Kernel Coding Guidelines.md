@@ -3,5 +3,6 @@ Read up to 12
 Try to follow these guidelines
 
 Main things:
-	Braces
+	Curly Bracket placement
+	function and variable names
 	No camelCase, use lowercase_and_underscores 
