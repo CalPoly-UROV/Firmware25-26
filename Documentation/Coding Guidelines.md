@@ -24,3 +24,4 @@
 
 #### Drivers
 - Make it modular. Depending on the peripheral used, you can use a few different pins for it (Alternate Functions) Write the driver such that the user can easily change which pins are used.
+- By default, use the pins mentioned in MCU Board.md
