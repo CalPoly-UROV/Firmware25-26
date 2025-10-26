@@ -7,3 +7,7 @@ void t200_setup(GPIO_TypeDef *GPIOx, uint32_t pin, TIM_TypeDef *TIMx, uint8_t ch
 	thruster_timer =
 	  PWM_Init(TIMx, GPIOx, pin, channel, 15, 19999, 0, 20, 1);
 }
+
+void t200_setspeed(uint32_t speed) {
+
+}
