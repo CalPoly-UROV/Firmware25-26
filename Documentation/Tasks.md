@@ -1,5 +1,6 @@
 ## Wrapper for PWM driver (MVP) - Adit & Raymond
 We have a basic motor PWM driver. Edit it to be in line with linux coding principles & be more user-friendly
+[https://bluerobotics.com/store/thrusters/t100-t200-thrusters/t200-thruster-r2-rp/]
 ###### Due at end of Fall Quarter
 ## comms.c (UART to USB to Topside) (MVP) - Marie and Saahana
 Write a c file that manages UART communication with topside. Come up with a better name for the file
