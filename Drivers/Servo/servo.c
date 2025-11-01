@@ -18,7 +18,7 @@
 
 // Configure PWM to allow for https://www.amazon.com/Rcmall-Torque-GX3270BLS-Digital-Brushless/dp/B0DGD83PNV?th=1
 
-void useHSE(void) {
+void useHSE(void) { //new
     RCC->CR |= RCC_CR_HSEON;
     while (!(RCC->CR & RCC_CR_HSERDY));
 
