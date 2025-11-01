@@ -16,11 +16,15 @@
  */
 
 
+
 // Configure PWM to allow for https://www.amazon.com/Rcmall-Torque-GX3270BLS-Digital-Brushless/dp/B0DGD83PNV?th=1
 
-void useHSE(void) { //new
-    RCC->CR |= RCC_CR_HSEON;
-    while (!(RCC->CR & RCC_CR_HSERDY));
+
+
+
+void useHSE(void) {
+    RCC->CR |= RCC_CR_HSEON; //Turn on HSE oscillator
+    while (!(RCC->CR & RCC_CR_HSERDY)); //
 
     if (RCC->CR & RCC_CR_PLLRDY) {       // PLL ready → use PLL
         RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | RCC_CFGR_SW_PLL;
