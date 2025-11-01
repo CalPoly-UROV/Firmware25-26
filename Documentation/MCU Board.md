@@ -63,6 +63,9 @@ TIM4 : up to 4 Servos PWMs
 | SPI1_SCK  | B3  |       |
 | SPI1_MISO | B4  |       |
 | SPI1_MOSI | B5  |       |
+| IMU_WAKE  | E0  |       |
+| IMU_RST   | E1  |       |
+| IMU_INT   | E2  |       |
 |           |     |       |
 | SPI2_NSS  | B9  |       |
 | SPI2_SCK  | B10 |       |
