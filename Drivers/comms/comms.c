@@ -2,7 +2,7 @@
 
 // call this to start receiving data
 void comms_init(){
-	uint8_t rx_byte;          // single-byte receive buffer
+	uint8_t rx_byte;          // single-byte receive buffer h
 	uint8_t rx_buffer[3];     // 3-byte packet
 	uint8_t rx_index = 0;     // index into rx_buffer
 	// 🟢 START UART reception (non-blocking)
