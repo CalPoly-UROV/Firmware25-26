@@ -50,7 +50,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 /**
- * @brief Definition for connected to SPI2 (APB1 PCLK = 42MHz)
+ * @brief Definition for connected to SPI1 (APB1 PCLK = 42MHz)
  */
 #define BNO080_SPI_CHANNEL		SPI1
 

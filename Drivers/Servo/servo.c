@@ -17,6 +17,9 @@
 
 
 
+// Configure PWM to allow for https://www.amazon.com/Rcmall-Torque-GX3270BLS-Digital-Brushless/dp/B0DGD83PNV?th=1
+
+
 
 void useHSE(void) {
     RCC->CR |= RCC_CR_HSEON; //Turn on HSE oscillator
