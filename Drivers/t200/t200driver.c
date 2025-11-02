@@ -39,8 +39,9 @@ void PWM_Init(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint32_t pin, uint8_t chan
 	else if(GPIOx == GPIOD) RCC->AHB1ENR |= RCC_AHB1ENR_GPIODEN;
 
 	if(TIMx == TIM2) RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-	//else if(TIMx == TIM5) RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
-	else if(TIMx == TIM3) RCC->APB1ENR |= (1<<1);
+	else if(TIMx == TIM5) RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
+	else if(TIMx == TIM3) RCC->APB1ENR |= (1<<1); // Should be the same as RCC_APB1ENR_TIM3EN but didn't test that yet.
+	else if(TIMx == TIM4) RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
 
 	//-----------------------------------------------------------------------------------
 	// PRELOAD CONFIGURATION — ensures updates happen only at period edge
