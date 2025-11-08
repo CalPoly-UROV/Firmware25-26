@@ -15,9 +15,16 @@
  * PWM_SetDuty(TIM2, 1, 250); // 25%
  */
 
+
+
+// Configure PWM to allow for https://www.amazon.com/Rcmall-Torque-GX3270BLS-Digital-Brushless/dp/B0DGD83PNV?th=1
+
+
+
+
 void useHSE(void) {
-    RCC->CR |= RCC_CR_HSEON;
-    while (!(RCC->CR & RCC_CR_HSERDY));
+    RCC->CR |= RCC_CR_HSEON; //Turn on HSE oscillator
+    while (!(RCC->CR & RCC_CR_HSERDY)); //
 
     if (RCC->CR & RCC_CR_PLLRDY) {       // PLL ready → use PLL
         RCC->CFGR = (RCC->CFGR & ~RCC_CFGR_SW) | RCC_CFGR_SW_PLL;
@@ -40,9 +47,6 @@ void PWM_Init(TIM_TypeDef *TIMx, GPIO_TypeDef *GPIOx, uint32_t pin, uint8_t chan
 
 	if(TIMx == TIM2) RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
 	else if(TIMx == TIM5) RCC->APB1ENR |= RCC_APB1ENR_TIM5EN;
-	else if(TIMx == TIM3) RCC->APB1ENR |= (1<<1); // Should be the same as RCC_APB1ENR_TIM3EN but didn't test that yet.
-	else if(TIMx == TIM4) RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
-
 	//-----------------------------------------------------------------------------------
 	// PRELOAD CONFIGURATION — ensures updates happen only at period edge
 	//-----------------------------------------------------------------------------------
