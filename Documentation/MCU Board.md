@@ -11,8 +11,8 @@ Use USART6
 
 | Signal    | Pin |
 | --------- | --- |
-| USART3_TX | C6  |
-| USART3_RX | C7  |
+| USART3_TX | D8  |
+| USART3_RX | D9  |
 
 ## SWD Debugger
 https://www.hackster.io/patrick-fitzgerald2/program-stm32-arm-cortex-with-st-link-swd-interface-f0d9e2
