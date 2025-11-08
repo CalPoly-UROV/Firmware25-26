@@ -49,8 +49,8 @@ TIM4 : up to 4 Servos PWMs
 | TIM2_CH2 | A1  |
 | TIM2_CH3 | B10 |
 | TIM2_CH4 | B11 |
-| TIM3_CH1 | B3  |
-| TIM3_CH2 | B4  |
+| TIM3_CH1 | B4  |
+| TIM3_CH2 | B5  |
 | TIM4_CH1 | D12 |
 | TIM4_CH2 | D13 |
 | TIM4_CH3 | D14 |
