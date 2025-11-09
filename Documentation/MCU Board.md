@@ -62,8 +62,8 @@ TIM4 : up to 4 Servos PWMs
 
 | Signal    | Pin | Notes |
 | --------- | --- | ----- |
-| USART2_Tx | A1  |       |
-| USART2_Rx | A2  |       |
+| USART2_Tx | A2  |       |
+| USART2_Rx | A3  |       |
 |           |     |       |
 | SPI1_NSS  | A4  |       |
 | SPI1_SCK  | A5  |       |
