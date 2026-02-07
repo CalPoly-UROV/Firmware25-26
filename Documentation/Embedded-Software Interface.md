@@ -1,5 +1,4 @@
 # Command packet structure
- 
  Commands are always sent as 10 bytes: 1 command byte + 9 argument bytes. 
  If a command uses fewer than 9 arguments, remaining argument bytes must be set to 0x00 (and are ignored by the receiver).
 
@@ -12,7 +11,7 @@
 All commands return 2 byte
 Byte 0 = echoed command byte, Byte 1 = return value (0x00 = success unless otherwise specified).
 
-| Byte Index |                   |              |
+| Byte Index |  0                | 1            |
 | ---------- | ----------------- | ------------ |
 | Data       | Command Byte Echo | Return Value |
 
@@ -78,17 +77,18 @@ Returns 0x00.
 | ---------- | ---- |
 | Data       | 0x25 |
 
+
 ## SEV (Servo) Commands
-Servo outputs are controlled by the PWM using timer channels 1-4. 
-Note: Servos must be booted before any set commands will succeed.   
+Servo commands use an angle in degrees (0–270).  
+Angles are transmitted as **16-bit unsigned integers (uint16_t)** in command packets.
 
-Servo commands use an 8-bit value (0–255) value is then mapped internally to PWM pulse width. 
+pulse_us = 500 + angle * 2000 / 270
 
-| Value Range | Meaning               |
-| ----------- | --------------------- |
-| 0           | Minimum output        |
-| ~127        | Neutral (approximate) |
-| 255         | Maximum output        |
+| Angle (deg) | Approx. Pulse (µs)  | Meaning                   |
+|------------:|--------------------:|--------------------------|
+| 0           | 500                 | Minimum                  |
+| 135         | ~1500               | Neutral (approximate)    |
+| 270         | ~2500               | Maximum                  |
 
 #### Return Codes
 
@@ -97,88 +97,105 @@ Servo commands use an 8-bit value (0–255) value is then mapped internally to P
 | 0x00  | Success                       |
 | 0x01  | Not booted                    |
 | 0x02  | Invalid index                 |
-| 0x03  | Invalid command (comms layer) |
+| 0x03  | Invalid angle                 |
 
 #### SEV_SET (0x30)
-Sets a single servo output value.
+Sets a single servo angle (degrees).
 
 Command Packet (10 Bytes)
-| Byte Index | 0    | 1                 | 2             | 3–9                       |
-| ---------- | ---- | ----------------- | ------------- | ------------------------- |
-| Data       | 0x30 | Servo Index (0–3) | Value (0–255) | Unused (0x00 recommended) |
+| Byte Index | 0    | 1                 | 2–3                    | 4–9                       |
+|-----------:|------|-------------------|------------------------|---------------------------|
+| Data       | 0x30 | Servo Index (0–3) | Angle (uint16, 0–270)  | Unused (0x00 recommended) |
 
 Response (2 Bytes)
 | Byte Index | 0           | 1           |
-| ---------- | ----------- | ----------- |
+|-----------:|-------------|-------------|
 | Data       | 0x30 (Echo) | Return Code |
 
+Angle is transmitted as a 16-bit unsigned integer (uint16_t) (endianness per comms layer).
+Valid range: 0–270 degrees.
+
 #### SEV_SET_A (0x31)
-Sets all servo outputs values.
+Sets all servo angles (degrees).
 
 Command Packet (10 Bytes)
-| Byte Index | 0    | 1       | 2       | 3       | 4       | 5–9    |
-| ---------- | ---- | ------- | ------- | ------- | ------- | ------ |
-| Data       | 0x31 | Servo 0 | Servo 1 | Servo 2 | Servo 3 | Unused |
+
+| Byte Index | 0    | 1–2                      | 3–4                      | 5–6                      | 7–8                      | 9                         |
+|-----------:|------|--------------------------|--------------------------|--------------------------|--------------------------|---------------------------|
+| Data       | 0x31 | Servo 0 Angle (uint16)   | Servo 1 Angle (uint16)   | Servo 2 Angle (uint16)   | Servo 3 Angle (uint16)   | Unused (0x00 recommended) |
 
 Response (2 Bytes)
+
 | Byte Index | 0           | 1           |
-| ---------- | ----------- | ----------- |
+|-----------:|-------------|-------------|
 | Data       | 0x31 (Echo) | Return Code |
 
+Servo angles are transmitted as 16-bit unsigned integers (uint16_t).  
+Valid range per servo: 0–270 degrees.
+
 #### SEV_BT (0x32)
-Boots one servo channel.
-Booting sets the servo output to 1500 µs.
+Boots one servo channel.  
+Booting sets the servo output to **1500 µs (neutral position)**.
 
 Command Packet (10 Bytes)
-| Byte Index | 0    | 1                 | 2–9    |
-| ---------- | ---- | ----------------- | ------ |
-| Data       | 0x32 | Servo Index (0–3) | Unused |
+
+| Byte Index | 0    | 1                 | 2–9                       |
+|-----------:|------|-------------------|---------------------------|
+| Data       | 0x32 | Servo Index (0–3) | Unused (0x00 recommended) |
 
 Response (2 Bytes)
+
 | Byte Index | 0           | 1           |
-| ---------- | ----------- | ----------- |
+|-----------:|-------------|-------------|
 | Data       | 0x32 (Echo) | Return Code |
 
 #### SEV_BT_A (0x33)
-Boots all servo channels.
-Booting sets all servo output to 1500 µs.
+Boots all servo channels.  
+Booting sets all servo outputs to **1500 µs (neutral position)** and sets the global boot flag.
 
 Command Packet (10 Bytes)
-| Byte Index | 0    | 1–9    |
-| ---------- | ---- | ------ |
-| Data       | 0x33 | Unused |
+
+| Byte Index | 0    | 1–9                       |
+|-----------:|------|---------------------------|
+| Data       | 0x33 | Unused (0x00 recommended) |
 
 Response (2 Bytes)
+
 | Byte Index | 0           | 1           |
-| ---------- | ----------- | ----------- |
+|-----------:|-------------|-------------|
 | Data       | 0x33 (Echo) | Return Code |
 
 #### SEV_UNBT (0x34)
-Sets a servo output value. 
+Unboots (disables) one servo channel.  
+Unbooting sets the servo output to **0 µs (output disabled)**.
 
 Command Packet (10 Bytes)
-| Byte Index | 0    | 1                 | 2–9    |
-| ---------- | ---- | ----------------- | ------ |
-| Data       | 0x34 | Servo Index (0–3) | Unused |
+
+| Byte Index | 0    | 1                 | 2–9                       |
+|-----------:|------|-------------------|---------------------------|
+| Data       | 0x34 | Servo Index (0–3) | Unused (0x00 recommended) |
 
 Response (2 Bytes)
+
 | Byte Index | 0           | 1           |
-| ---------- | ----------- | ----------- |
+|-----------:|-------------|-------------|
 | Data       | 0x34 (Echo) | Return Code |
 
 #### SEV_UNBT_A (0x35)
-Sets all servo output values. 
+Unboots (disables) all servo channels.  
+Unbooting sets all servo outputs to **0 µs (output disabled)** and clears the global boot flag.
 
 Command Packet (10 Bytes)
-| Byte Index | 0    | 1       | 2       | 3       | 4       | 5–9    |
-| ---------- | ---- | ------- | ------- | ------- | ------- | ------ |
-| Data       | 0x31 | Servo 0 | Servo 1 | Servo 2 | Servo 3 | Unused |
+
+| Byte Index | 0    | 1–9                       |
+|-----------:|------|---------------------------|
+| Data       | 0x35 | Unused (0x00 recommended) |
 
 Response (2 Bytes)
-| Byte Index | 0           | 1           |
-| ---------- | ----------- | ----------- |
-| Data       | 0x31 (Echo) | Return Code |
 
+| Byte Index | 0           | 1           |
+|-----------:|-------------|-------------|
+| Data       | 0x35 (Echo) | Return Code |
 
 ## BOP (Breakout Output Pin) Commands
 
