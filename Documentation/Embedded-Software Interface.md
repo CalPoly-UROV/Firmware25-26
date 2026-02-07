@@ -50,35 +50,35 @@ Sets all thrusters. Speed is an unsigned 8-bit value. 0 is full negative thrust,
 | 0x00        | Success                             |
 | 0x01        | At least one thruster is not booted |
 #### THS_BT (0x22)
-Boots individual thrusters.
-Returns 0x00.
+Boots individual thrusters by setting their PWM pulse widths to 1500ms. Thruster should do its boot up beeps.
+Returns 0x00 on success. Returns 0x02 if thruster index is invalid.
 
 | Byte Index | 0    | 1              |
 | ---------- | ---- | -------------- |
 | Data       | 0x22 | Thruster Index |
 #### THS_BT_A (0x23)
-Boots all
+Boots all thrusters.
 Returns 0x00.
 
 | Byte Index | 0    |
 | ---------- | ---- |
 | Data       | 0x23 |
 #### THS_UNBT (0x24)
-Unboots individual thrusters.
-Returns 0x00.
+Unboots individual thrusters by setting their PWM pulse widths to 0ms. 
+Returns 0x00 on success. Returns 0x02 if thruster index is invalid.
 
 | Byte Index | 0    | 1              |
 | ---------- | ---- | -------------- |
 | Data       | 0x24 | Thruster Index |
 #### THS_UNBT_A (0x25)
-Unboots individual thrusters.
+Unboots all thrusters.
 Returns 0x00.
 
 | Byte Index | 0    |
 | ---------- | ---- |
 | Data       | 0x25 |
 
-## THS (Servo) Commands
+## SEV (Servo) Commands
 Servo outputs are controlled by the PWM using timer channels 1-4. 
 Note: Servos must be booted before any set commands will succeed.   
 
