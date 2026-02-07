@@ -1,30 +1,73 @@
-## Command packet structure
- All commands are 10 bytes formatted like so: 
+# Command packet structure
+ All commands are 10 bytes formatted like below. Not all commands require all 9 argument bytes.
 
 | Byte Index | 0            | 1-9       |
 | ---------- | ------------ | --------- |
 | Data       | Command Byte | Arguments |
-All commands return 1 byte: the command byte
+All commands return 2 byte
 
-## Commands
-#### MOT_SET
-Set an individual motor to a value. 
-
-| Byte index | 0          | 1           | 2     | 3    | 4    | 5    | 6    | 7    | 8    | 9    |
-| ---------- | ---------- | ----------- | ----- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Data       | 0x4D ('M') | Motor Index | Value | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
-
-#### MOT_ALL_SET
-Set all motors to new values. 
-
-| Byte index | 0          | 1             | 2             | 3             | 4             | 5             | 6             | 7             | 8    | 9    |
-| ---------- | ---------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ------------- | ---- | ---- |
-| Data       | 0x57 ('W') | motor 0 value | motor 1 value | motor 2 value | motor 3 value | motor 4 value | motor 5 value | motor 6 value | NULL | NULL |
+| Byte Index |                   |              |
+| ---------- | ----------------- | ------------ |
+| Data       | Command Byte Echo | Return Value |
 
 
-#### LED_BLNK
-Blink the orange LED on the STM devboard. Purely for debug purposes. 
+# Commands
 
-| Byte index | 0          | 1            | 2           | 3    | 4    | 5    | 6    | 7    | 8    | 9    |
-| ---------- | ---------- | ------------ | ----------- | ---- | ---- | ---- | ---- | ---- | ---- | ---- |
-| Data       | 0x42 ('B') | Emmpty Value | Empty Value | NULL | NULL | NULL | NULL | NULL | NULL | NULL |
+## LED Commands
+#### LED_BLNK (0x10)
+Toggles LED state
+Returns 0x00
+
+## THS (Thruster) Commands
+
+#### THS_SET (0x20)
+Sets individual thrusters. Speed is an unsigned 8-bit value. 0 is full negative thrust, 255 is full forward thrust, 127 is zero thrust. Thrusters must be first booted before their speed can be changed.
+
+| Byte Index | 0    | 1              | 2     |
+| ---------- | ---- | -------------- | ----- |
+| Data       | 0x20 | Thruster Index | Speed |
+
+| Return Byte |                     |
+| ----------- | ------------------- |
+| 0           | Success             |
+| 1           | Thruster not booted |
+
+#### THS_SET_A (0x21)
+Sets all thrusters. Speed is an unsigned 8-bit value. 0 is full negative thrust, 255 is full forward thrust, 127 is zero thrust. Thrusters must be first booted before their speed can be changed.
+
+| Byte Index | 0    | 1                | 2                | 3                | 4                | 5                | 6                |
+| ---------- | ---- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- |
+| Data       | 0x21 | Thruster 1 Speed | Thruster 2 Speed | Thruster 3 Speed | Thruster 4 Speed | Thruster 5 Speed | Thruster 6 Speed |
+
+| Return Byte |                                     |
+| ----------- | ----------------------------------- |
+| 0x00        | Success                             |
+| 0x01        | At least one thruster is not booted |
+#### THS_BT (0x22)
+Boots individual thrusters.
+Returns 0x00.
+
+| Byte Index | 0    | 1              |
+| ---------- | ---- | -------------- |
+| Data       | 0x22 | Thruster Index |
+#### THS_BT_A (0x23)
+Boots individual thrusters.
+Returns 0x00.
+
+| Byte Index | 0    |
+| ---------- | ---- |
+| Data       | 0x23 |
+#### THS_UNBT (0x24)
+Unboots individual thrusters.
+Returns 0x00.
+
+| Byte Index | 0    | 1              |
+| ---------- | ---- | -------------- |
+| Data       | 0x22 | Thruster Index |
+#### THS_UNBT_A (0x25)
+Unboots individual thrusters.
+Returns 0x00.
+
+| Byte Index | 0    |
+| ---------- | ---- |
+| Data       | 0x23 |
