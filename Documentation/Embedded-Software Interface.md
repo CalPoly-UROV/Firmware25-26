@@ -1,10 +1,16 @@
 # Command packet structure
- All commands are 10 bytes formatted like below. Not all commands require all 9 argument bytes.
+ 
+ Commands are always sent as 10 bytes: 1 command byte + 9 argument bytes. 
+ If a command uses fewer than 9 arguments, remaining argument bytes must be set to 0x00 (and are ignored by the receiver).
+
+ An example of this if formatted below: 
 
 | Byte Index | 0            | 1-9       |
 | ---------- | ------------ | --------- |
 | Data       | Command Byte | Arguments |
+
 All commands return 2 byte
+Byte 0 = echoed command byte, Byte 1 = return value (0x00 = success unless otherwise specified).
 
 | Byte Index |                   |              |
 | ---------- | ----------------- | ------------ |
@@ -37,7 +43,7 @@ Sets all thrusters. Speed is an unsigned 8-bit value. 0 is full negative thrust,
 
 | Byte Index | 0    | 1                | 2                | 3                | 4                | 5                | 6                |
 | ---------- | ---- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- | ---------------- |
-| Data       | 0x21 | Thruster 1 Speed | Thruster 2 Speed | Thruster 3 Speed | Thruster 4 Speed | Thruster 5 Speed | Thruster 6 Speed |
+| Data       | 0x21 | Thruster 0 Speed | Thruster 1 Speed | Thruster 2 Speed | Thruster 3 Speed | Thruster 4 Speed | Thruster 5 Speed |
 
 | Return Byte |                                     |
 | ----------- | ----------------------------------- |
@@ -51,7 +57,7 @@ Returns 0x00.
 | ---------- | ---- | -------------- |
 | Data       | 0x22 | Thruster Index |
 #### THS_BT_A (0x23)
-Boots individual thrusters.
+Boots all
 Returns 0x00.
 
 | Byte Index | 0    |
@@ -63,11 +69,157 @@ Returns 0x00.
 
 | Byte Index | 0    | 1              |
 | ---------- | ---- | -------------- |
-| Data       | 0x22 | Thruster Index |
+| Data       | 0x24 | Thruster Index |
 #### THS_UNBT_A (0x25)
 Unboots individual thrusters.
 Returns 0x00.
 
 | Byte Index | 0    |
 | ---------- | ---- |
-| Data       | 0x23 |
+| Data       | 0x25 |
+
+## THS (Servo) Commands
+Servo outputs are controlled by the PWM using timer channels 1-4. 
+Note: Servos must be booted before any set commands will succeed.   
+
+Servo commands use an 8-bit value (0–255) value is then mapped internally to PWM pulse width. 
+
+| Value Range | Meaning               |
+| ----------- | --------------------- |
+| 0           | Minimum output        |
+| ~127        | Neutral (approximate) |
+| 255         | Maximum output        |
+
+#### Return Codes
+
+| Value | Meaning                       |
+| ----- | ----------------------------- |
+| 0x00  | Success                       |
+| 0x01  | Not booted                    |
+| 0x02  | Invalid index                 |
+| 0x03  | Invalid command (comms layer) |
+
+#### SEV_SET (0x30)
+Sets a single servo output value.
+
+Command Packet (10 Bytes)
+| Byte Index | 0    | 1                 | 2             | 3–9                       |
+| ---------- | ---- | ----------------- | ------------- | ------------------------- |
+| Data       | 0x30 | Servo Index (0–3) | Value (0–255) | Unused (0x00 recommended) |
+
+Response (2 Bytes)
+| Byte Index | 0           | 1           |
+| ---------- | ----------- | ----------- |
+| Data       | 0x30 (Echo) | Return Code |
+
+#### SEV_SET_A (0x31)
+Sets all servo outputs values.
+
+Command Packet (10 Bytes)
+| Byte Index | 0    | 1       | 2       | 3       | 4       | 5–9    |
+| ---------- | ---- | ------- | ------- | ------- | ------- | ------ |
+| Data       | 0x31 | Servo 0 | Servo 1 | Servo 2 | Servo 3 | Unused |
+
+Response (2 Bytes)
+| Byte Index | 0           | 1           |
+| ---------- | ----------- | ----------- |
+| Data       | 0x31 (Echo) | Return Code |
+
+#### SEV_BT (0x32)
+Boots one servo channel.
+Booting sets the servo output to 1500 µs.
+
+Command Packet (10 Bytes)
+| Byte Index | 0    | 1                 | 2–9    |
+| ---------- | ---- | ----------------- | ------ |
+| Data       | 0x32 | Servo Index (0–3) | Unused |
+
+Response (2 Bytes)
+| Byte Index | 0           | 1           |
+| ---------- | ----------- | ----------- |
+| Data       | 0x32 (Echo) | Return Code |
+
+#### SEV_BT_A (0x33)
+Boots all servo channels.
+Booting sets all servo output to 1500 µs.
+
+Command Packet (10 Bytes)
+| Byte Index | 0    | 1–9    |
+| ---------- | ---- | ------ |
+| Data       | 0x33 | Unused |
+
+Response (2 Bytes)
+| Byte Index | 0           | 1           |
+| ---------- | ----------- | ----------- |
+| Data       | 0x33 (Echo) | Return Code |
+
+#### SEV_UNBT (0x34)
+Sets a servo output value. 
+
+Command Packet (10 Bytes)
+| Byte Index | 0    | 1                 | 2–9    |
+| ---------- | ---- | ----------------- | ------ |
+| Data       | 0x34 | Servo Index (0–3) | Unused |
+
+Response (2 Bytes)
+| Byte Index | 0           | 1           |
+| ---------- | ----------- | ----------- |
+| Data       | 0x34 (Echo) | Return Code |
+
+#### SEV_UNBT_A (0x35)
+Sets all servo output values. 
+
+Command Packet (10 Bytes)
+| Byte Index | 0    | 1       | 2       | 3       | 4       | 5–9    |
+| ---------- | ---- | ------- | ------- | ------- | ------- | ------ |
+| Data       | 0x31 | Servo 0 | Servo 1 | Servo 2 | Servo 3 | Unused |
+
+Response (2 Bytes)
+| Byte Index | 0           | 1           |
+| ---------- | ----------- | ----------- |
+| Data       | 0x31 (Echo) | Return Code |
+
+
+## BOP (Breakout Output Pin) Commands
+
+##### BOP_HIGH (0x40)
+
+Sets breakout pins HIGH.
+
+Pins Affected:
+PB6, PB7
+PE2, PE4, PE5, PE6
+PF0, PF1
+
+Command Packet
+| Byte Index | 0    | 1–9    |
+| ---------- | ---- | ------ |
+| Data       | 0x40 | Unused |
+
+Respnse
+| Byte Index | 0           | 1    |
+| ---------- | ----------- | ---- |
+| Data       | 0x40 (Echo) | 0x00 |
+
+#### BOP_LOW (0x41)
+
+Sets breakout pins LOW.
+
+Pins Affected:
+PB6, PB7
+PE2, PE4, PE5, PE6
+PF0, PF1
+
+Command Packet
+| Byte Index | 0    | 1–9    |
+| ---------- | ---- | ------ |
+| Data       | 0x41 | Unused |
+
+Response Packet
+| Byte Index | 0           | 1    |
+| ---------- | ----------- | ---- |
+| Data       | 0x41 (Echo) | 0x00 |
+
+#### Boot Requirement
+
+Set commands return error if: sev_boot == 0
