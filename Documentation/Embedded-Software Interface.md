@@ -51,7 +51,7 @@ Returns 0x00.
 | ---------- | ---- | -------------- |
 | Data       | 0x22 | Thruster Index |
 #### THS_BT_A (0x23)
-Boots individual thrusters.
+Boots all thrusters.
 Returns 0x00.
 
 | Byte Index | 0    |
@@ -65,7 +65,7 @@ Returns 0x00.
 | ---------- | ---- | -------------- |
 | Data       | 0x22 | Thruster Index |
 #### THS_UNBT_A (0x25)
-Unboots individual thrusters.
+Unboots all thrusters.
 Returns 0x00.
 
 | Byte Index | 0    |
