@@ -1,20 +1,42 @@
-# Command packet structure
- Commands are always sent as 10 bytes: 1 command byte + 9 argument bytes. 
- If a command uses fewer than 9 arguments, remaining argument bytes must be set to 0x00 (and are ignored by the receiver).
+# Command Packet Structure
 
- An example of this if formatted below: 
+Commands are always sent as **10 bytes total**:
 
-| Byte Index | 0            | 1-9       |
+If a command uses fewer than 9 arguments, the remaining argument bytes **must be set to `0x00`** and are ignored by the receiver.
+
+## Packet Format
+
+| Byte Index | 0            | 1–9       |
 | ---------- | ------------ | --------- |
 | Data       | Command Byte | Arguments |
 
-All commands return 2 byte
-Byte 0 = echoed command byte, Byte 1 = return value (0x00 = success unless otherwise specified).
+## Command Responses
 
-| Byte Index |  0                | 1            |
-| ---------- | ----------------- | ------------ |
-| Data       | Command Byte Echo | Return Value |
+All commands return **2 bytes**:
 
+- **Byte 0** = echoed command byte  
+- **Byte 1** = return value (`0x00` = success unless otherwise specified)
+
+| Byte Index | 0                  | 1            |
+| ---------- | ------------------ | ------------ |
+| Data       | Command Byte Echo  | Return Value |
+
+# Thruster PWM Mapping
+
+Thruster speed commands are converted to PWM pulse width using:
+pulse_us = 1500 + ((int32_t)speed - 127) * 400 / 127
+
+## Speed Command Reference
+
+| Speed Command | Approx. Pulse (µs) | Meaning |
+|--------------:|-------------------:|---------|
+| 0   | ~1100 | Full Reverse |
+| 127 | 1500  | Neutral |
+| 255 | ~1900 | Full Forward |
+
+- Casting to `int32_t` prevents unsigned wraparound when subtracting 127.  
+- The mapping produces approximately ±400 µs around neutral.  
+- Small rounding error (≈ ±3 µs at extremes) is normal and acceptable for ESC control.
 
 # Commands
 
