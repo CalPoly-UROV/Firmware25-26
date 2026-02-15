@@ -345,18 +345,18 @@ Clears the relevant AFR[] nibble fields.
 
 Writes AF selections to respective comms setting:
 
-PB6, PB7 --> AF7
-PE2, PE4, PE5, PE6 --> AF5
-PF0, PF1 --> AF4
+- PB6, PB7 --> AF7
+- PE2, PE4, PE5, PE6 --> AF5
+- PF0, PF1 --> AF4
 
 AF fields are 4 bits per pin (‘nibbles’) in AFR; mode fields are 2 bits per pin in MODER.
 
-Command Packet
+Command Packet (10 Bytes)
 | Byte Index | 0    | 1–9    |
 | ---------- | ---- | ------ |
 | Data       | 0x42 | Unused |
 
-Response Packet
+Response Packet (2 Bytes)
 | Byte Index | 0           | 1    |
 | ---------- | ----------- | ---- |
 | Data       | 0x42 (Echo) | 0x00 |
