@@ -28,7 +28,7 @@ All commands return **2 bytes**:
 Toggles LED state
 Returns 0x00
 
-# ---------------------------THS (Thruster) Commands---------------------------
+# ------------------------THS (Thruster) Commands------------------------
 
 Thruster speed commands are converted to PWM pulse width using:
 pulse_us = 1100 + (uint32_t)(speed * 400 / 127)
