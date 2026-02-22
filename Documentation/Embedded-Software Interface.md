@@ -34,7 +34,7 @@ Status: 0x00
 ## THS (Thruster) Commands
 
 Thruster speed commands are given as unsigned 8-bit integers. They are converted to PWM pulse width using the following equation:
-pulse_us = 1500 + ((int32_t)speed - 127) * 400 / 127
+**'pulse_us = 1500 + ((int32_t)speed - 127) * 400 / 127'**
 
 | Speed Command | Approx. Pulse (µs) | Meaning      |
 | ------------: | -----------------: | ------------ |
@@ -92,7 +92,7 @@ Unboots all thrusters.
 ## SEV (Servo) Commands
 Servo commands use an angle in degrees (0–270).  
 Angles are transmitted as **16-bit unsigned integers (uint16_t)** in command packets.
-Angles are converted to PWM pulse widths with the following equation: pulse_us = 500 + angle * 2000 / 270
+Angles are converted to PWM pulse widths with the following equation: **'pulse_us = 500 + angle * 2000 / 270'**
 
 | Angle (deg) | Approx. Pulse (µs)  | Meaning                   |
 |------------:|--------------------:|--------------------------|
