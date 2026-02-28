@@ -84,6 +84,9 @@ TIM4 : up to 4 Servos PWMs
 | I2C2_SCL  | F1  |       |
 |           |     |       |
 
+MPU 3v3: PB1
+BNO 3v3: PE10
+
 ## Dev Board
 | # | 1   | 2   | 3   | 4   |
 |---|-----|-----|-----|-----|
