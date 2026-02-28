@@ -229,18 +229,12 @@ Returns the current data packet stored from the BNO085. Will only return a data 
 
 | Data Packet Byte |            |
 | ---------------- | ---------- |
-| 0                | YAW_LSB    |
-| 1                | YAW_MSB    |
-| 2                | PITCH_LSB  |
-| 3                | PITCH_MSB  |
-| 4                | ROLL_LSB   |
-| 5                | ROLL_MSB   |
-| 6                | XACCEL_LSB |
-| 7                | XACCEL_MSB |
-| 8                | YACCEL_LSB |
-| 9                | YACCEL_MSB |
-| 10               | ZACCEL_LSB |
-| 11               | ZACCEL_MSB |
+| 0 - 1            | YAW        |
+| 2 - 3            | PITCH      |
+| 4 - 5            | ROLL       |
+| 6 - 7            | XACCEL     |
+| 8 - 9            | YACCEL     |
+| 10 - 11          | ZACCEL     |
 | 12               | Checksum   |
 
 If the return byte Checksum is calculated as sum of bytes 0-11. 
