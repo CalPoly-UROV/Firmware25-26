@@ -209,6 +209,7 @@ The BNO085 board-mounted IMU reports positional data: angle since boot and linea
 | 16   | 0x00          |
 | 17   | Reserved      |
 | 18   | Checksum      |
+
 Checksum is calculated as the sum of bytes 2-14 and byte 17. The driver will check the header and checksum bytes for validity. 
 Each measurement is a 16-bit signed integer. Acceleration is in milli-gs and has no gravity compensation. Yaw has a range of +/- 180 degrees, Pitch has a range of +/- 90 degrees, Roll has a range of +/- 180 degrees. Angles are given in increments of 0.01 degrees. Ex: -1093 = -10.93 degrees. To determine orientation, apply rotations in the order of: yaw, pitch, then roll.
 
@@ -241,6 +242,7 @@ Returns the current data packet stored from the BNO085. Will only return a data 
 | 10               | ZACCEL_LSB |
 | 11               | ZACCEL_MSB |
 | 12               | Checksum   |
+
 If the return byte Checksum is calculated as sum of bytes 0-11. 
 
 ## MPU IMU Commands (Breakout IMU)
@@ -249,6 +251,7 @@ The MPU6050 IMU uses the board's breakout pins to communicate via I2C DMA. The d
 | Status |         |
 | ------ | ------- |
 | 0x00   | Success |
+
 The MPU reports angular velocities and linear accelerations all as 16-bit signed integers. Angular velocity is in degrees/second in increments of 0.01 degrees/s. Linear acceleration is cm/s^2. Gravity is not compensated for.
 ##### MPU_READ (0xB0)
 Accesses the MPU6050's memory via I2C DMA and returns a data packet.
@@ -272,4 +275,5 @@ Accesses the MPU6050's memory via I2C DMA and returns a data packet.
 | 10               | Z_ACCEL_LSB   |
 | 11               | Z_ACCEL_MSB   |
 | 12               | Checksum      |
+
 Checksum is calculated as the sum of bytes 0-11.
