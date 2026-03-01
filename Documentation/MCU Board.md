@@ -85,6 +85,7 @@ TIM4 : up to 4 Servos PWMs
 |           |     |       |
 
 MPU 3v3: PB1
+
 BNO 3v3: PB12
 
 ## Dev Board
