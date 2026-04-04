@@ -1,20 +1,23 @@
 import struct
 import serial
-import time
+from time import sleep
 import keyboard
 
 #Name of serial port
-port = "COM4"
+port = "COM7"
 ser = serial.Serial(port, 115200, timeout = 1);
 
 def send_command(com):
     ser.write(com)
     ser.flush()
-    ret = ser.read(2)
+    ret = ser.read(3)
     return ret
 
 while True:
+    sleep(0.01)
+    ser.flush()
     line = input("Enter hex bytes: ")
+    #line = "a0"
 
     # Parse hex values
     values = [int(x, 16) for x in line.split()]
@@ -27,4 +30,17 @@ while True:
 
     data = bytes(values)
     response = send_command(data)
-    print(response.hex(" "))
+    if(len(response) != 0):
+        length = response[2]
+        if(response[0] != data[0]):
+            print(response.hex(" ") + " | bad response")
+        elif(length == bytes([0])):
+            print(response.hex(" "))
+        else:
+            ser.flush()
+            response2 = ser.read(length)
+        
+            s = 0
+            for i in range(length - 1):
+                s += response2[i]
+            print(response.hex(" ") + " | " + response2.hex(" ") + " | " + f"{bytes([s % 256]).hex(" ")}")
