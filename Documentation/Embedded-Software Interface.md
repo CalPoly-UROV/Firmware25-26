@@ -110,15 +110,15 @@ Angles are converted to PWM pulse widths with the following equation: **'pulse_u
 #### SEV_SET (0x30)
 Sets a single servo angle.
 
-| Byte Index | 0    | 1                 | 2–3                   |
+| Byte Index | 0    | 1                 | 2–                   |
 | ---------: | ---- | ----------------- | --------------------- |
-|       Data | 0x30 | Servo Index (0–3) | Angle (uint16, 0–270) |
+|       Data | 0x30 | Servo Index (0–1) | Angle (uint16, 0–270) |
 #### SEV_SET_A (0x31)
 Sets all servo angles.
 
-| Byte Index | 0    | 1–2                    | 3–4                    | 5–6                    | 7–8                    |
-| ---------: | ---- | ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-|       Data | 0x31 | Servo 0 Angle (uint16) | Servo 1 Angle (uint16) | Servo 2 Angle (uint16) | Servo 3 Angle (uint16) |
+| Byte Index | 0      | 1-2                    | 3-4                    |
+| ---------: | ------ | ---------------------- | ---------------------- |
+|       Data | 0x31   | Servo 0 Angle (uint16) | Servo 1 Angle (uint16) |
 
 #### SEV_BT (0x32)
 Boots one servo channel.  
