@@ -185,10 +185,10 @@ Reads the other mpu
 Turns off power to the MPUs
 
 ##### MPU_INIT (0xB3)
-Enables power to the MPUs
-Returns flag byte with certain flags set. If no flags set, MPUs are good
-0x1: mpu_0 no response (timeout)
-0x2: mpu_0 bad response
-0x4: mpu_1 no response (timeout)
-0x8: mpu_1 bad response
+Enables power to the MPUs  
+Returns flag byte with certain flags set. If no flags set, MPUs are good  
+0x1: mpu_0 no response (timeout)  
+0x2: mpu_0 bad response  
+0x4: mpu_1 no response (timeout)  
+0x8: mpu_1 bad response  
 
