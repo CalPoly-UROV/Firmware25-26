@@ -152,8 +152,8 @@ Unbooting sets all servo outputs to **0 µs (output disabled)**.
 | ---------: | ---- |
 |       Data | 0x35 |
 
-
-##### MPU_READ (0xB0)
+## MPU Commands
+##### MPU_READ_0 (0xB0)
 Accesses the MPU6050's memory via I2C DMA and returns a data packet.
 
 | Byte Index | 0    |
@@ -177,3 +177,9 @@ Accesses the MPU6050's memory via I2C DMA and returns a data packet.
 | 12               | Checksum      |
 
 Checksum is calculated as the sum of bytes 0-11.
+
+##### MPU_READ_1 (0xB1)
+reads the other mpu
+
+##### MPU_DINIT (0xB2)
+##### MPU_INIT (0xB3)
