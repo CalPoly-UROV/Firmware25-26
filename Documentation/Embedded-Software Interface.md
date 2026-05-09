@@ -52,6 +52,16 @@ Thruster speed commands are given as unsigned 8-bit integers. They are converted
 | 0x01   | Thruster not booted    |
 | 0x02   | Invalid thruster index |
 
+#### Firmware to Physical Thruster Mapping
+| Firmware Index | Physical Thruster Number |
+| -------------- | ------------------------ |
+| 0              | 1                        |
+| 1              | 2                        |
+| 2              | 3                        |
+| 3              | 4                        |
+| 4              | 6                        |
+| 5              | 5                        |
+
 #### THS_SET (0x20)
 Sets individual thrusters. Thrusters must be first booted before their speed can be changed.
 
