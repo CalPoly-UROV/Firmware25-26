@@ -188,6 +188,9 @@ Accesses the MPU6050's memory via I2C DMA and returns a data packet.
 
 Checksum is calculated as the sum of bytes 0-11.
 
+Returns 0 on valid data
+Returns 1 if last read was invalid
+
 ##### MPU_READ_1 (0xB1)
 Reads the other mpu
 
@@ -196,9 +199,14 @@ Turns off power to the MPUs
 
 ##### MPU_INIT (0xB3)
 Enables power to the MPUs  
+returns 0. Actual value of initialization needs to be retreived with another command
+
+##### MPU_INIT_STATUS (0xB4)
+returns mpu_init status
 Returns flag byte with certain flags set. If no flags set, MPUs are good  
 0x1: mpu_0 no response (timeout)  
 0x2: mpu_0 bad response  
 0x4: mpu_1 no response (timeout)  
 0x8: mpu_1 bad response  
+
 
