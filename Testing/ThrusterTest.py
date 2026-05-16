@@ -4,7 +4,7 @@ from time import sleep
 import keyboard
 
 #Name of serial port
-port = "COM3"
+port = "COM7"
 ser = serial.Serial(port, 115200, timeout = 1);
 
 def send_command(com):
@@ -35,13 +35,22 @@ def print_response(response):
 
 states = ["Boot", "Boot", "Boot", "Boot", "Boot", "Boot"]
 
+"""
+index 0: thruster 1
+index 1: thruster 2
+index 2: thruster 3
+index 3: thruster 4
+index 4: thruster 6
+index 6: thruster 5
+"""
+
 while True:
 	print(f"\n[0]{states[0]} thruster 0\t[1]{states[1]} thruster 1\t[2]{states[2]} thruster 2\n[3]{states[3]} thruster 3\t[4]{states[4]} thruster 4\t[5]{states[5]} thruster 5\n[E] Unboot all and exit\n")
 	command = input("Enter command:")
 	if(command == "e"):
 		for i in range(6):
 			print(f"Unbooting thruster {i}")
-			print_response(send_line(f"22 {i}"))
+			print_response(send_line(f"24 {i}"))
 		
 		print("exit")
 		break;
